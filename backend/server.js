@@ -13,6 +13,9 @@ const port = 5000;
 const youtubekey=process.env.youtubeApi
 const huggingkey=process.env.huggingFaceAPi
 
+app.get("/", async (req, res) => {
+    return res.status(200).send({message:"welcome to server!"});
+})
 app.post("/getdata", async (req, res) => {
     console.log(req.body)
     let line=req.body.link;
