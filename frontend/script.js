@@ -22,7 +22,7 @@ function execquery() {
             }
         }
 
-        fetch("http://localhost:5000/getdata", {
+        fetch("https://chat-analysis-brown.vercel.app/getdata", {
             method: "POST",
             body: JSON.stringify({
                 link: link,
@@ -47,12 +47,10 @@ function execquery() {
                 
             }).catch((err)=>{
                 sessionStorage.clear()
-                console.log("res.json")
                 alert(err)
             })
         }).catch((err)=>{
             sessionStorage.clear()
-            console.log("fetch")
             alert(err)
         })
         
