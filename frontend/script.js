@@ -6,9 +6,20 @@ function execquery() {
 
     if (checkLink(link)) {
 
-        if (localStorage.getItem("token") && localStorage.getItem("link") == link) {
-            token = localStorage.getItem("token");
-            console.log(token)
+        if(sessionStorage.getItem("link") == null && sessionStorage.getItem("link") == null)
+        {
+            console.log("both null")
+        }
+        else if (sessionStorage.getItem("token") != null && sessionStorage.getItem("link") != null) {
+            if( sessionStorage.getItem("link") == link)
+            {
+                token=sessionStorage.getItem('token');
+                console.log(token, " <- same url so using next token")
+            }
+            else{
+                console.log("nex url session clear")
+                sessionStorage.clear()
+            }
         }
 
         fetch("http://localhost:5000/getdata", {
@@ -24,11 +35,27 @@ function execquery() {
         ).then((res) => {
             const pro = res.json()
             pro.then((data) => {
-                console.log(data.token, data.emotionlist)
-                localStorage.setItem("token", data.token)
-                localStorage.setItem("link",link)
+                if(data.err != undefined)
+                {
+                    alert(data.err)
+                }
+                else{
+                    console.log(data.token, data.emotionlist ,"response")
+                    sessionStorage.setItem("token", data.token)
+                    sessionStorage.setItem("link",link)
+                }
+                
+            }).catch((err)=>{
+                sessionStorage.clear()
+                console.log("res.json")
+                alert(err)
             })
+        }).catch((err)=>{
+            sessionStorage.clear()
+            console.log("fetch")
+            alert(err)
         })
+        
     }
 }
 
