@@ -24,7 +24,7 @@ function execquery() {
         let local="http://localhost:5000/getdata"
         let hostedlink="https://chat-analysis-brown.vercel.app/getdata"
 
-        fetch(local, {
+        fetch(hostedlink, {
             method: "POST",
             body: JSON.stringify({
                 link: link,
