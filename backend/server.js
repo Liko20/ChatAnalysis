@@ -14,6 +14,7 @@ const youtubekey=process.env.youtubeApi
 const huggingkey=process.env.huggingFaceAPi
 
 app.get("/", async (req, res) => {
+    console.log("hit")
     return res.status(200).send({message:"welcome to server!"});
 })
 app.post("/getdata", async (req, res) => {
@@ -41,8 +42,9 @@ app.post("/getdata", async (req, res) => {
         liveChatID = data.items[0].liveStreamingDetails.activeLiveChatId;
         let nextPageToken=""
         
-        if(req.body.nextPageToken!= undefined && req.body.nextPageToken!="" )
+        if(req.body.nextPageToken != undefined && req.body.nextPageToken != "" )
         {
+            console.log("here")
             nextPageToken=req.body.nextPageToken
            
         }
@@ -51,7 +53,9 @@ app.post("/getdata", async (req, res) => {
         
         const res2 = await fetch(`https://www.googleapis.com/youtube/v3/liveChat/messages?liveChatId=${liveChatID}&part=snippet,authorDetails&maxResults=10&pageToken=${nextPageToken}&key=${youtubekey}`);
         const data1 = await res2.json();
-
+       
+        
+      
 
         const chatlist  = data1.items;
 
@@ -63,7 +67,7 @@ app.post("/getdata", async (req, res) => {
             try{    
                 
                 const emotion = await getEmotion({"inputs":chatlist[j].snippet.textMessageDetails.messageText})
-                
+                console.log(emotion)
                 console.log(emotion[0][0].label)
 
                 if(countEmotion[emotion[0][0].label] === undefined)
@@ -76,7 +80,7 @@ app.post("/getdata", async (req, res) => {
 
             }catch(err)
             {
-              
+                console.error(err)  
                 return res.status(500).send({err:"internal server error"});
             }
           
@@ -87,15 +91,16 @@ app.post("/getdata", async (req, res) => {
         res.send({"emotionlist": countEmotion, "token":nextPageToken ,});
         
     }catch(err)
-    {
-        
+    {   
         res.status(500).send({err:'Internal Server Error'});
     }
+
     
     
 })
 
 async function getEmotion(data) {
+    
     try{
         const response = await fetch(
             "https://api-inference.huggingface.co/models/arpanghoshal/EmoRoBERTa",
@@ -110,6 +115,7 @@ async function getEmotion(data) {
     }
     catch(err)
     {
+        
         return err;
     }
 	

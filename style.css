@@ -1,0 +1,10 @@
+*{
+    color: antiquewhite;
+}
+.searchBox{
+    background-color: aqua;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
